@@ -94,14 +94,14 @@ public class ArrayQueueTest {
     }
 
     @Test
-    public void testContainsReturnFalseOnEmptyStack() {
+    public void testContainsReturnFalseOnEmptyQueue() {
         ArrayQueue arrayQueue = new ArrayQueue();
 
         assertFalse(arrayQueue.contains("C"));
     }
 
     @Test
-    public void testThrowIllegalStateExceptionWhenPopOnEmptyStack() {
+    public void testThrowIllegalStateExceptionWhenPopOnEmptyQueue() {
         ArrayQueue arrayQueue = new ArrayQueue();
         Assertions.assertThrows(IllegalStateException.class, () -> {
             arrayQueue.dequeue();
