@@ -1,5 +1,7 @@
 package com.borshcheva.datastructure.list;
 
+import java.util.Objects;
+
 public class ArrayList implements List{
 
     private int size;
@@ -11,9 +13,6 @@ public class ArrayList implements List{
 
     @Override
     public void add(Object value) {
-        if (value == null) {
-            throw new NullPointerException("Nulls are not supported");
-        }
         ensureCapacity();
         array[size] = value;
         size++;
@@ -86,7 +85,7 @@ public class ArrayList implements List{
     public boolean contains(Object value) {
         for (int i = 0; i < size; i++) {
             Object valueInStack = array[i];
-            if (value.equals(valueInStack)) {
+            if (Objects.equals(valueInStack, value)) {
                 return true;
             }
         }

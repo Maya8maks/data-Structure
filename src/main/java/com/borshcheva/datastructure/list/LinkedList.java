@@ -1,6 +1,8 @@
 package com.borshcheva.datastructure.list;
 
-public class LinkedList implements List{
+import java.util.Objects;
+
+public class LinkedList implements List {
 
     private Node head;
     private Node tail;
@@ -22,26 +24,26 @@ public class LinkedList implements List{
 
     @Override
     public void add(Object value, int index) {
-        if (index > size || index < 0){
+        if (index > size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
         Node newNode = new Node(value);
         if (isEmpty()) {
             head = newNode;
             tail = newNode;
-        } else if(index == size){
+        } else if (index == size) {
             tail.next = newNode;
             newNode.prev = tail;
             tail = newNode;
 
-        } else if(index == 0) {
+        } else if (index == 0) {
             head.prev = newNode;
             newNode.next = head;
             head = newNode;
         } else {
             int count = 0;
             Node current = head;
-            while(count != index) {
+            while (count != index) {
                 current = current.next;
                 count++;
             }
@@ -66,11 +68,14 @@ public class LinkedList implements List{
             head = current.next;
             current.next.prev = null;
 
-        } else if (index == size-1) {
+        } else if (index == size - 1) {
             Node current = tail;
             removedItem = tail;
             tail = current.prev;
             current.prev.next = null;
+
+        } else if (size == 1) {
+            head = tail = null;
 
         } else {
             int count = 0;
@@ -93,18 +98,18 @@ public class LinkedList implements List{
     @Override
     public Object get(int index) {
         Node current = head;
-        if (index >= size || index < 0){
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
         if (index == 0) {
             return head.value;
         }
-        if(index == size -1){
+        if (index == size - 1) {
             return tail.value;
         }
         int count = 0;
 
-        while(count != index) {
+        while (count != index) {
             current = current.next;
             count++;
         }
@@ -113,12 +118,12 @@ public class LinkedList implements List{
 
     @Override
     public Object set(Object value, int index) {
-        if (index >= size || index < 0){
+        if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
         int counter = 0;
         Node current = head;
-        while(counter != index) {
+        while (counter != index) {
             current = current.next;
             counter++;
         }
@@ -147,8 +152,7 @@ public class LinkedList implements List{
     public boolean contains(Object value) {
         Node current = head;
         for (int i = 0; i < size; i++) {
-
-            if (current.value.equals(value)) {
+            if (Objects.equals(current.value, value)) {
                 return true;
             }
             current = current.next;
