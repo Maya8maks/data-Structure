@@ -215,6 +215,7 @@ public abstract class AbstractListTest {
         list.add("A");
 
         assertEquals(2, list.lastIndexOf("A"));
+        assertEquals(1, list.lastIndexOf("B"));
 
     }
 

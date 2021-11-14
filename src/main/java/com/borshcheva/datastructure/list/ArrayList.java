@@ -1,16 +1,21 @@
 package com.borshcheva.datastructure.list;
 
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class ArrayList implements List{
 
     private int size;
     private Object[] array;
 
-    public ArrayList() {
-        array = new Object[10];
+    public ArrayList(int capacity) {
+        array = new Object[capacity];
     }
 
+    public ArrayList() {
+        this(10);
+    }
     @Override
     public void add(Object value) {
         ensureCapacity();
@@ -23,14 +28,8 @@ public class ArrayList implements List{
         if(index > size){
             throw new IndexOutOfBoundsException("Index is larger than size of the Array List");
         }
-        if (value == null) {
-            throw new NullPointerException("Nulls are not supported");
-        }
         ensureCapacity();
-      var indexArrayValue = array[index];
-        for (int i = size-1; i >= index; i--) {
-            array[i+1] = array[i];
-        }
+        System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = value;
         size++;
     }
@@ -43,9 +42,7 @@ public class ArrayList implements List{
 
         var indexArrayValue = array[index];
 
-        for (int i = index; i < size; i++) {
-            array[i] = array[i+1];
-        }
+        System.arraycopy(array, index + 1, array, index, size - index);
         array[size-1] = null;
         size--;
         return indexArrayValue;
@@ -83,20 +80,14 @@ public class ArrayList implements List{
 
     @Override
     public boolean contains(Object value) {
-        for (int i = 0; i < size; i++) {
-            Object valueInStack = array[i];
-            if (Objects.equals(valueInStack, value)) {
-                return true;
-            }
-        }
-        return false;
+        return indexOf(value) >= 0;
     }
 
     @Override
     public int indexOf(Object value) {
         for (int i = 0; i < size; i++) {
             Object valueInStack = array[i];
-            if (value.equals(valueInStack)) {
+            if (Objects.equals(value, valueInStack)) {
                 return i;
             }
         }
@@ -107,7 +98,7 @@ public class ArrayList implements List{
     public int lastIndexOf(Object value) {
         for (int i = size - 1; i >= 0; i--) {
             Object valueInStack = array[i];
-            if (value.equals(valueInStack)) {
+            if (Objects.equals(value, valueInStack)) {
                 return i;
             }
         }
@@ -123,18 +114,39 @@ public class ArrayList implements List{
             array = newArray;
         }
     }
+
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder();
+        StringJoiner stringJoiner = new StringJoiner(", ","[","]");
         for (int i = 0; i < size; i++) {
-            result.append(array[i].toString());
-            if(i==size-1){
-                break;
-            }
-            else {
-                result.append(", ");
-            }
+            stringJoiner.add(array[i].toString());
         }
-        return  "[" + result + "]";
+        return stringJoiner.toString();
+    }
+
+    @Override
+    public Iterator iterator() {
+        return new MyIterator();
+    }
+
+    private class MyIterator implements Iterator{
+        private int count;
+
+        @Override
+        public boolean hasNext() {
+            return count < size;
+        }
+
+        @Override
+        public Object next() {
+
+            return get(count++);
+        }
+
+        @Override
+        public void remove() {
+            int indexToRemove = count - 1;
+            ArrayList.this.remove(indexToRemove);
+        }
     }
 }

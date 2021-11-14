@@ -1,6 +1,8 @@
 package com.borshcheva.datastructure.list;
 
+import java.util.Iterator;
 import java.util.Objects;
+import java.util.StringJoiner;
 
 public class LinkedList implements List {
 
@@ -150,22 +152,14 @@ public class LinkedList implements List {
 
     @Override
     public boolean contains(Object value) {
-        Node current = head;
-        for (int i = 0; i < size; i++) {
-            if (Objects.equals(current.value, value)) {
-                return true;
-            }
-            current = current.next;
-        }
-        return false;
+        return indexOf(value) >= 0;
     }
 
     @Override
     public int indexOf(Object value) {
         Node current = head;
         for (int i = 0; i < size; i++) {
-
-            if (current.value.equals(value)) {
+            if (Objects.equals(value, current.value)) {
                 return i;
             }
             current = current.next;
@@ -175,14 +169,63 @@ public class LinkedList implements List {
 
     @Override
     public int lastIndexOf(Object value) {
-        Node current = head;
+        Node current = tail;
         for (int i = size - 1; i >= 0; i--) {
-
-            if (current.value.equals(value)) {
+            if (Objects.equals(value, current.value)) {
                 return i;
             }
-            current = current.next;
+            current = current.prev;
         }
         return -1;
     }
+
+    @Override
+    public String toString() {
+        StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
+        Node current = head;
+        int count = 0;
+        while (count != size) {
+            stringJoiner.add(current.value.toString());
+            current = current.next;
+            count++;
+        }
+        return stringJoiner.toString();
+    }
+
+
+    @Override
+    public Iterator iterator() {
+        return new LinkedList.MyIterator();
+    }
+
+    private static class Node {
+        private Object value;
+        private Node next;
+        private Node prev;
+
+        public Node(Object value) {
+            this.value = value;
+        }
+    }
+
+    private class MyIterator implements Iterator {
+        private int count;
+
+        @Override
+        public boolean hasNext() {
+            return count < size;
+        }
+
+        @Override
+        public Object next() {
+            return get(count++);
+        }
+
+        @Override
+        public void remove() {
+            int indexToRemove = count - 1;
+            LinkedList.this.remove(indexToRemove);
+        }
+    }
+
 }
