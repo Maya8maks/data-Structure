@@ -14,6 +14,7 @@ public abstract class AbstractListTest {
     public void before() {
         list = getList();
     }
+
     protected abstract List getList();
 
     @Test

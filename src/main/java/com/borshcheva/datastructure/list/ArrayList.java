@@ -4,28 +4,29 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class ArrayList implements List{
+public class ArrayList<T> implements List<T> {
 
     private int size;
-    private Object[] array;
+    private T[] array;
 
     public ArrayList(int capacity) {
-        array = new Object[capacity];
+        array = (T[]) new Object[capacity];
     }
 
     public ArrayList() {
         this(10);
     }
+
     @Override
-    public void add(Object value) {
+    public void add(T value) {
         ensureCapacity();
         array[size] = value;
         size++;
     }
 
     @Override
-    public void add(Object value, int index) {
-        if(index > size){
+    public void add(T value, int index) {
+        if (index > size) {
             throw new IndexOutOfBoundsException("Index is larger than size of the Array List");
         }
         ensureCapacity();
@@ -35,26 +36,26 @@ public class ArrayList implements List{
     }
 
     @Override
-    public Object remove(int index) {
-        if(index > size){
+    public T remove(int index) {
+        if (index > size) {
             throw new IndexOutOfBoundsException("Index is larger than size of the Array List");
         }
 
-        var indexArrayValue = array[index];
+        T indexArrayValue = array[index];
 
         System.arraycopy(array, index + 1, array, index, size - index);
-        array[size-1] = null;
+        array[size - 1] = null;
         size--;
         return indexArrayValue;
     }
 
     @Override
-    public Object get(int index) {
+    public T get(int index) {
         return array[index];
     }
 
     @Override
-    public Object set(Object value, int index) {
+    public Object set(T value, int index) {
         var result = array[index];
         array[index] = value;
         return result;
@@ -62,7 +63,7 @@ public class ArrayList implements List{
 
     @Override
     public void clear() {
-        for (int i=0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             array[i] = null;
         }
         size = 0;
@@ -79,14 +80,14 @@ public class ArrayList implements List{
     }
 
     @Override
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return indexOf(value) >= 0;
     }
 
     @Override
-    public int indexOf(Object value) {
+    public int indexOf(T value) {
         for (int i = 0; i < size; i++) {
-            Object valueInStack = array[i];
+            T valueInStack = array[i];
             if (Objects.equals(value, valueInStack)) {
                 return i;
             }
@@ -95,9 +96,9 @@ public class ArrayList implements List{
     }
 
     @Override
-    public int lastIndexOf(Object value) {
+    public int lastIndexOf(T value) {
         for (int i = size - 1; i >= 0; i--) {
-            Object valueInStack = array[i];
+            T valueInStack = array[i];
             if (Objects.equals(value, valueInStack)) {
                 return i;
             }
@@ -105,9 +106,9 @@ public class ArrayList implements List{
         return -1;
     }
 
-    private void ensureCapacity(){
+    private void ensureCapacity() {
         if (size == array.length) {
-            Object[] newArray = new Object[(int) (array.length * 1.5)];
+            T[] newArray = (T[]) new Object[(int) (array.length * 1.5)];
             for (int i = 0; i < size; i++) {
                 newArray[i] = array[i];
             }
@@ -115,9 +116,10 @@ public class ArrayList implements List{
         }
     }
 
+
     @Override
     public String toString() {
-        StringJoiner stringJoiner = new StringJoiner(", ","[","]");
+        StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
         for (int i = 0; i < size; i++) {
             stringJoiner.add(array[i].toString());
         }
@@ -129,7 +131,7 @@ public class ArrayList implements List{
         return new MyIterator();
     }
 
-    private class MyIterator implements Iterator{
+    private class MyIterator implements Iterator<T> {
         private int count;
 
         @Override
@@ -138,7 +140,7 @@ public class ArrayList implements List{
         }
 
         @Override
-        public Object next() {
+        public T next() {
 
             return get(count++);
         }

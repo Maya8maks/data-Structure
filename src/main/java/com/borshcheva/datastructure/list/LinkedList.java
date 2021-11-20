@@ -4,15 +4,15 @@ import java.util.Iterator;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-public class LinkedList implements List {
+public class LinkedList<T> implements List<T> {
 
-    private Node head;
-    private Node tail;
+    private Node<T> head;
+    private Node<T> tail;
     private int size;
 
     @Override
-    public void add(Object value) {
-        Node newNode = new Node(value);
+    public void add(T value) {
+        Node<T> newNode = new Node<T>(value);
         if (isEmpty()) {
             head = newNode;
             tail = newNode;
@@ -25,11 +25,11 @@ public class LinkedList implements List {
     }
 
     @Override
-    public void add(Object value, int index) {
+    public void add(T value, int index) {
         if (index > size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        Node newNode = new Node(value);
+        Node<T> newNode = new Node<T>(value);
         if (isEmpty()) {
             head = newNode;
             tail = newNode;
@@ -44,7 +44,7 @@ public class LinkedList implements List {
             head = newNode;
         } else {
             int count = 0;
-            Node current = head;
+            Node<T> current = head;
             while (count != index) {
                 current = current.next;
                 count++;
@@ -58,14 +58,14 @@ public class LinkedList implements List {
     }
 
     @Override
-    public Object remove(int index) {
+    public T remove(int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        Node removedItem = null;
+        Node<T> removedItem = null;
 
         if (index == 0) {
-            Node current = head;
+            Node<T> current = head;
             removedItem = head;
             head = current.next;
             current.next.prev = null;
@@ -81,7 +81,7 @@ public class LinkedList implements List {
 
         } else {
             int count = 0;
-            Node current = head;
+            Node<T> current = head;
             while (count != index) {
                 current = current.next;
                 count++;
@@ -98,8 +98,8 @@ public class LinkedList implements List {
     }
 
     @Override
-    public Object get(int index) {
-        Node current = head;
+    public T get(int index) {
+        Node<T> current = head;
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
@@ -119,16 +119,11 @@ public class LinkedList implements List {
     }
 
     @Override
-    public Object set(Object value, int index) {
+    public T set(T value, int index) {
         if (index >= size || index < 0) {
             throw new IndexOutOfBoundsException();
         }
-        int counter = 0;
-        Node current = head;
-        while (counter != index) {
-            current = current.next;
-            counter++;
-        }
+        Node<T> current = getNode(index);
         current.value = value;
         return current.value;
     }
@@ -151,13 +146,13 @@ public class LinkedList implements List {
     }
 
     @Override
-    public boolean contains(Object value) {
+    public boolean contains(T value) {
         return indexOf(value) >= 0;
     }
 
     @Override
-    public int indexOf(Object value) {
-        Node current = head;
+    public int indexOf(T value) {
+        Node<T> current = head;
         for (int i = 0; i < size; i++) {
             if (Objects.equals(value, current.value)) {
                 return i;
@@ -168,8 +163,8 @@ public class LinkedList implements List {
     }
 
     @Override
-    public int lastIndexOf(Object value) {
-        Node current = tail;
+    public int lastIndexOf(T value) {
+        Node<T> current = tail;
         for (int i = size - 1; i >= 0; i--) {
             if (Objects.equals(value, current.value)) {
                 return i;
@@ -182,7 +177,7 @@ public class LinkedList implements List {
     @Override
     public String toString() {
         StringJoiner stringJoiner = new StringJoiner(", ", "[", "]");
-        Node current = head;
+        Node<T> current = head;
         int count = 0;
         while (count != size) {
             stringJoiner.add(current.value.toString());
@@ -192,23 +187,35 @@ public class LinkedList implements List {
         return stringJoiner.toString();
     }
 
+    public Node<T> getNode(int index) {
+        Node<T> node = head;
 
-    @Override
-    public Iterator iterator() {
-        return new LinkedList.MyIterator();
+        int count = 0;
+
+        while (count != index) {
+            node = node.next;
+            count++;
+        }
+        return node;
     }
 
-    private static class Node {
-        private Object value;
-        private Node next;
-        private Node prev;
+    @Override
+    public Iterator<T> iterator() {
+        return new MyIterator();
+    }
 
-        public Node(Object value) {
+    private static class Node<T> {
+        private T value;
+        private Node<T> next;
+        private Node<T> prev;
+
+        public Node(T value) {
             this.value = value;
         }
     }
 
-    private class MyIterator implements Iterator {
+
+    private class MyIterator implements Iterator<T> {
         private int count;
 
         @Override
@@ -217,7 +224,7 @@ public class LinkedList implements List {
         }
 
         @Override
-        public Object next() {
+        public T next() {
             return get(count++);
         }
 
